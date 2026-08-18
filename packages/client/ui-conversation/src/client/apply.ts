@@ -32,6 +32,12 @@ import { ComposerSubmissionPolicy } from './input/submission-policy.ts'
 import { queueDockEntry } from './queue/QueueDock.tsx'
 import { EnterBehaviorRow } from './settings/EnterBehaviorRow.tsx'
 import type { EnterBehaviorRowInjected } from './settings/EnterBehaviorRow.tsx'
+import { LayoutStyleController } from './layout-style-controller.ts'
+import { LayoutStyleRow } from './settings/LayoutStyleRow.tsx'
+import type { LayoutStyleRowInjected } from './settings/LayoutStyleRow.tsx'
+import { LayoutStyleAction } from './LayoutStyleAction.tsx'
+import type { LayoutStyleActionInjected } from './LayoutStyleAction.tsx'
+import { LAYOUT_STYLE_CSS, type LayoutStyle } from '../layout-style.ts'
 import { ConversationRoot } from './skeleton/ConversationRoot.tsx'
 import { ConversationContent } from './skeleton/ConversationContent.tsx'
 import { ConversationPanel } from './skeleton/ConversationPanel.tsx'
@@ -175,6 +181,56 @@ export function apply(ctx: Context, config: Config = Config({})): void {
       setBusyEnter: (behavior) => { submissionPolicy.setBusyEnter(behavior) },
     }),
   }, EnterBehaviorRow))
+  // Layout style (默认 / 更多内容): the live preference drives one injected
+  // stylesheet; persistence is localStorage (see layout-style.ts), so the
+  // choice survives reloads and restarts without a Host settings namespace.
+  const layoutStyle = new LayoutStyleController()
+  let layoutStyleElement: HTMLStyleElement | null = null
+  const syncLayoutStyle = (style: LayoutStyle): void => {
+    if (layoutStyleElement !== null) {
+      layoutStyleElement.remove()
+      layoutStyleElement = null
+    }
+    if (style === 'more') {
+      layoutStyleElement = document.createElement('style')
+      layoutStyleElement.dataset.dshLayoutStyle = 'more'
+      layoutStyleElement.textContent = LAYOUT_STYLE_CSS
+      document.head.appendChild(layoutStyleElement)
+    }
+  }
+  ctx.effect(() => {
+    syncLayoutStyle(layoutStyle.style.getSnapshot())
+    const unsubscribe = layoutStyle.style.subscribe(() => {
+      syncLayoutStyle(layoutStyle.style.getSnapshot())
+    })
+    return () => {
+      unsubscribe()
+      syncLayoutStyle('default')
+    }
+  }, 'ui-conversation: layout style')
+
+  ctx.slots.inject('settings.general.item', () => ctx.slots.register({
+    name: 'settings.general.item',
+    id: 'chat-layout-style',
+    order: 30,
+    locale: NS,
+    inject: (): LayoutStyleRowInjected => ({
+      hooks: { layoutStyle: layoutStyle.style },
+      setLayoutStyle: (style) => { layoutStyle.setStyle(style) },
+    }),
+  }, LayoutStyleRow))
+
+  ctx.slots.inject('conversation.session.header.actions', () => ctx.slots.register({
+    name: 'conversation.session.header.actions',
+    id: 'chat-layout-style',
+    order: 30,
+    locale: NS,
+    inject: (): LayoutStyleActionInjected => ({
+      hooks: { layoutStyle: layoutStyle.style },
+      setLayoutStyle: (style) => { layoutStyle.setStyle(style) },
+    }),
+  }, LayoutStyleAction))
+
 
   const viewTabs = (): ViewTab[] => {
     const tabs: ViewTab[] = []

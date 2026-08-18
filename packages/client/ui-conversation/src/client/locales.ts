@@ -372,6 +372,11 @@ export const zh = {
   'terminal.expandRest': '… 其余 {n} 行',
   'terminal.sendInput': '（发送输入）',
   'terminal.session': '终端 {sessionId}',
+  'settings.layoutStyle.title': '界面风格',
+  'settings.layoutStyle.desc': '对话内容区排版密度',
+  'settings.layoutStyle.default': '默认',
+  'settings.layoutStyle.more': '更多内容',
+  'settings.layoutStyle.toggle': '点击切换界面风格（默认 / 更多内容）',
 } satisfies Record<string, string>
 
 /** The conversation namespace key union. */
@@ -744,4 +749,9 @@ export const en = {
   // aligned with these English values.
   'terminal.sendInput': '(send input)',
   'terminal.session': 'Terminal {sessionId}',
+  'settings.layoutStyle.title': 'Layout style',
+  'settings.layoutStyle.desc': 'Message layout density',
+  'settings.layoutStyle.default': 'Default',
+  'settings.layoutStyle.more': 'More content',
+  'settings.layoutStyle.toggle': 'Toggle layout style (Default / More content)',
 } satisfies Record<ConversationKey, string>
