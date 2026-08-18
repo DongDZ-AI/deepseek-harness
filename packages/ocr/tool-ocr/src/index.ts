@@ -56,11 +56,13 @@ export const Config: z<Config> = z.object({
 
 const TOOL_DESCRIPTION =
   'Run Tesseract OCR on a local image file and return the extracted text. '
-  + 'Use this to read text out of images (screenshots, scans, photos of documents) '
-  + 'on model routes that cannot accept image input directly. The image must be a '
-  + 'regular file readable through the session filesystem; `language` is a tesseract '
-  + 'language code such as "eng" or "chi_sim", and `psm` is an optional page-segmentation '
-  + 'mode from 0 to 13 (defaults to tesseract\'s own choice).'
+  + 'IMPORTANT: this deployment\'s model route is TEXT-ONLY — the `read_image` tool '
+  + 'will ALWAYS fail here with "model does not declare image input". To read image '
+  + 'content (screenshots, scans, photos of documents, pasted attachments under '
+  + '.dsh/tmp/attachments/), call THIS tool (`ocr_image`) for text extraction, or run '
+  + '`mmx vision describe --image <path> --prompt "..."` via bash for full image '
+  + 'understanding. `language` is a tesseract language code such as "eng" or "chi_sim", '
+  + 'and `psm` is an optional page-segmentation mode from 0 to 13 (defaults to tesseract\'s own choice).'
 
 /** The canonical `ocr_image` outcome. */
 export interface OcrReadValue {
