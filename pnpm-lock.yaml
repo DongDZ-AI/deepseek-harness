@@ -10498,6 +10498,22 @@ importers:
         specifier: workspace:^
         version: link:../../../vendor/cordis
 
+  packages/vision/tool-vision:
+    dependencies:
+      '@deepseek-ai/schemastery':
+        specifier: link:../../../vendor/schemastery
+        version: link:../../../vendor/schemastery
+    devDependencies:
+      '@deepseek-ai/cordis':
+        specifier: workspace:^
+        version: link:../../../vendor/cordis
+      '@deepseek-ai/dsh-fs':
+        specifier: workspace:^
+        version: link:../../fs/fs
+      '@deepseek-ai/dsh-tools':
+        specifier: workspace:^
+        version: link:../../core/tools
+
   packages/web/tool-web:
     dependencies:
       '@deepseek-ai/dsh-util-values':
