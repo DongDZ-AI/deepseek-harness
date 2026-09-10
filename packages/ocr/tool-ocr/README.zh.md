@@ -32,4 +32,4 @@
 
 - 工具声明 `isConcurrencySafe`：每次调用都是独立的只读 OS 进程。
 - 取消是协作式的：`exec.signal` 转发给子进程，`timeoutMs` 声明为工具的协作超时预算。
-- 本包附带不变量伴生插件（`tool-ocr-invariant`），安装器为空：工具不拥有独立的生命周期流，其输出形态由工具输出 schema 在分发时强制。
+- 本包不发布不变量伴生插件（No runtime invariant companion is published）：工具没有可对照的独立生命周期流，其输出形态由工具输出 schema 在分发时强制。
