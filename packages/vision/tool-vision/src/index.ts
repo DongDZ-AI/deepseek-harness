@@ -26,7 +26,7 @@ import {
   DEFAULT_PROMPT,
   DEFAULT_TIMEOUT_MS,
   truncateOutput,
-} from './invariant.ts'
+} from './defaults.ts'
 
 const execFile = promisify(execFileCb)
 

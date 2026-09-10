@@ -30,3 +30,7 @@ Add a row to the profile's `cordis.patch.yml`:
 ```
 
 Requires the `mmx` CLI (`mmx vision describe`) to be installed and reachable on PATH.
+
+## Notes
+
+- No runtime invariant companion is published because the tool owns no independent lifecycle stream to compare; its output is the VLM's description bounded by the configured character cap.

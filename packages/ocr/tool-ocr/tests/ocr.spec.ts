@@ -20,7 +20,7 @@ import {
   truncateOutput,
   validateLanguageCode,
   validatePsm,
-} from '../src/invariant.ts'
+} from '../src/defaults.ts'
 
 /** The execFile options our tool passes to the child process. */
 interface ExecOptions {

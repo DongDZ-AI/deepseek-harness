@@ -1,13 +1,10 @@
 /**
- * Constants, defaults, pure argument/format helpers, and the package invariant
- * companion for the `ocr_image` tool. Deployment-varying choices live in the
- * plugin `Config` (see `src/index.ts`); the defaults here are the schema's
- * fallback values, overridable from cordis.yml.
- * @module @deepseek-ai/dsh-tool-ocr/invariant
+ * Constants, defaults, and pure argument/format helpers for the `ocr_image`
+ * tool. Deployment-varying choices live in the plugin `Config` (see
+ * `src/index.ts`); the defaults here are the schema's fallback values,
+ * overridable from cordis.yml.
+ * @module @deepseek-ai/dsh-tool-ocr/defaults
  */
-
-import type { Context } from '@deepseek-ai/cordis'
-import type { InvariantInstaller } from '@deepseek-ai/dsh-invariants'
 
 /** Default Tesseract binary path (macOS Homebrew layout). Override via `binPath`. */
 export const DEFAULT_BIN_PATH = '/opt/homebrew/bin/tesseract'
@@ -23,13 +20,6 @@ export const PSM_MAX = 13
 
 /** Tesseract language codes: letters, digits, underscore, and `+` for compound codes. */
 export const LANGUAGE_CODE_PATTERN = /^[A-Za-z0-9_+]+$/
-
-const PACKAGE_NAME = '@deepseek-ai/dsh-tool-ocr'
-
-/** Cordis companion plugin name. */
-export const name = 'tool-ocr-invariant'
-/** Service required before the companion can reserve package ownership. */
-export const inject = ['invariants']
 
 /**
  * Build the tesseract CLI argument vector for one OCR run.
@@ -81,20 +71,3 @@ export function truncateOutput(text: string, maxChars: number): string {
   if (text.length <= maxChars) return text
   return `${text.slice(0, maxChars)}\n\n[output truncated at ${maxChars} characters]`
 }
-
-/* jscpd:ignore-start -- package companions share replay and dispatch plumbing */
-/**
- * No runtime invariant: this model-facing adapter owns no independent lifecycle
- * stream; the tool's canonical output shape is enforced by its output schema at
- * dispatch time, and its executions are the agent loop's events.
- */
-const install: InvariantInstaller = () => {}
-
-/**
- * Register this package's invariant companion.
- * @param ctx - Cordis context carrying the invariant service.
- * @returns the installed registration's disposer after setup succeeds.
- */
-export const apply = (ctx: Context): Promise<() => void> =>
-  Promise.resolve(ctx.invariants.register(PACKAGE_NAME, install))
-/* jscpd:ignore-end */
