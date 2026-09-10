@@ -27,7 +27,7 @@ import {
   truncateOutput,
   validateLanguageCode,
   validatePsm,
-} from './invariant.ts'
+} from './defaults.ts'
 
 const execFile = promisify(execFileCb)
 
