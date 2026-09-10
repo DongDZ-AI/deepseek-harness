@@ -30,3 +30,7 @@
 ```
 
 需要 `mmx` CLI（`mmx vision describe`）已安装且在 PATH 上。
+
+## 说明
+
+- 本包不发布不变量伴生插件（No runtime invariant companion is published）：工具没有可对照的独立生命周期流；其输出是受配置字符上限约束的 VLM 描述。

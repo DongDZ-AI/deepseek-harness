@@ -32,4 +32,4 @@ All fields are overridable from cordis.yml — the binary location and language 
 
 - The tool is `isConcurrencySafe`: each call is an independent read-only OS process.
 - Cancellation is cooperative: `exec.signal` is forwarded to the child process, and `timeoutMs` is declared as the tool's cooperative timeout budget.
-- The package ships an invariant companion (`tool-ocr-invariant`) with an empty installer: the tool owns no independent lifecycle stream, and its output shape is enforced by the tool output schema at dispatch time.
+- No runtime invariant companion is published because the tool owns no independent lifecycle stream to compare, and its output shape is enforced by the tool output schema at dispatch time.
