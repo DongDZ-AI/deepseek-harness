@@ -49,9 +49,17 @@ Each step exists because skipping it produced a real failure during the 0.1.2→
 
 Commit the realignment (regenerated paths, lockfile, version bumps) as its own commit before moving on.
 
-## Stage 3 — rebuild deployed plugin tarballs
+## Stage 3 — re-qualify deployed plugins, per plugin (never batch)
 
-A tarball bakes in the DSH API surface of its build time. After the baseline moves, rebuild every tarball under `/Users/dongdz/Code/dsh-plugin-tarballs/` against the new checkout and name the artifact with its baseline (e.g. `dsh-ppt-0.4.1-onto-0.1.5.tgz`). Never reuse a tarball built on an older baseline; keep the previous generation as `.bak-<date>` only for rollback.
+A tarball bakes in the DSH API surface of its build time, so every deployed plugin needs re-qualification after the baseline moves — but plugins fall into two classes with different paths, and a batch rebuild destroys the source-maintained ones:
+
+1. **Inventory and classify** each tarball against its source: **source-maintained** (a plugin repo exists under `/Users/dongdz/Code/<plugin>/` — `dsh-archify`, the `@dsh-community/dsh-paste-input` fork, the dsh-ppt SPIC customization; these carry local modifications that an upstream release would silently discard) versus **community-prebuilt** (no local source; it cannot be rebuilt at all).
+
+2. **Source-maintained path**: run the plugin's own typecheck against the new DSH baseline first — the same API-alignment probe as Stage 2. Adapt only what the typecheck flags, rebuild only that plugin against the new checkout, verify it loads, and publish as `<name>-<version>-onto-<baseline>.tgz`. Never run routine dependency updates inside plugin repos — bump only what the typecheck demands, because working dependency combinations are the plugin's tested state.
+
+3. **Community-prebuilt path**: look for a community release matching the new baseline (the paste-input 0.1.5/0.1.6 pair is that pattern). If none exists, keep the old tarball and test whether it still loads; if it does not, that plugin blocks the deployment until the community publishes or the baseline rolls back.
+
+4. **One plugin, one build, one verification, one tarball.** A failing plugin never holds the others hostage: ship what passes, pin the rest at their last known-good generation, and record the pin.
 
 ## Stage 4 — deploy and smoke
 
