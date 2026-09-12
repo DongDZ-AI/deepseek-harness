@@ -164,13 +164,21 @@ async function collectActivePluginPackages(
   if (sessionId !== undefined && ctx.get('agentPresets') !== undefined) {
     const agent = ctx.agents.get(brandString<SessionId>(sessionId))
     if (agent !== undefined) {
-      // The optional peer is loaded only when its service is present. Its existing
-      // mount query keeps Loader internals off the public AgentPresets service.
-      const { standingMountFor } = await import('@deepseek-ai/dsh-agent-preset-registry')
-      const presetTree = standingMountFor(agent.ctx)?.tree
-      // PresetTree deliberately resolves its root bare rows from the harness;
-      // nested ordinary includes retain their own tree base.
-      if (presetTree !== undefined) entries.push(...activeEntries(presetTree, hostBaseUrl))
+      // 2026-09-12 容错:这个动态导入曾在运行环境里失败,把整个 prepare 抛穿,
+      // 连带所有 DeepSeek 请求报 REQUEST_EXTENSION 全部失败(实测)。
+      // 扩展清单是"尽力而为"的信息,少列预设包不该打死对话 —— 失败就跳过预设来源。
+      try {
+        // The optional peer is loaded only when its service is present. Its existing
+        // mount query keeps Loader internals off the public AgentPresets service.
+        const { standingMountFor } = await import('@deepseek-ai/dsh-agent-preset-registry')
+        const presetTree = standingMountFor(agent.ctx)?.tree
+        // PresetTree deliberately resolves its root bare rows from the harness;
+        // nested ordinary includes retain their own tree base.
+        if (presetTree !== undefined) entries.push(...activeEntries(presetTree, hostBaseUrl))
+      } catch (error: unknown) {
+        console.warn('[dsh_plugin_packages] agent-presets 扩展来源读取失败,已跳过:',
+          error instanceof Error ? error.message : String(error))
+      }
     }
   }
   const unique = new Map<string, DeepSeekPluginPackageIdentity>()
