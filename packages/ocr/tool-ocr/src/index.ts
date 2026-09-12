@@ -56,12 +56,17 @@ export const Config: z<Config> = z.object({
 
 const TOOL_DESCRIPTION =
   'Run Tesseract OCR on a local image file and return the extracted text. '
-  + 'IMPORTANT: this deployment\'s model route is TEXT-ONLY — the `read_image` tool '
-  + 'will ALWAYS fail here with "model does not declare image input". To read image '
-  + 'content (screenshots, scans, photos of documents, pasted attachments under '
-  + '.dsh/tmp/attachments/), call THIS tool (`ocr_image`) for text extraction, or run '
-  + '`mmx vision describe --image <path> --prompt "..."` via bash for full image '
-  + 'understanding. `language` is a tesseract language code such as "eng" or "chi_sim", '
+  // 2026-09-12: 原描述断言"本部署模型路由是纯文本、read_image 永远失败" —— 那是过时的,
+  // 曾误导模型绕道 vision_describe 而从不试 read_image。改为**条件说明**:
+  // 能不能原生读图取决于当前所选模型是否声明 image 输入,以实测为准。
+  + 'Use this tool for text extraction when the current model cannot take image input, '
+  + 'or when you specifically want raw OCR text. FIRST check whether native image input '
+  + 'works: try `read_image` — it succeeds whenever the session model declares image '
+  + 'input (a multimodal route), and only then fails with "model does not declare image '
+  + 'input" on a text-only route. Do not assume it will fail: take one real attempt, and '
+  + 'fall back to this tool (or `mmx vision describe --image <path> --prompt "..."` via '
+  + 'bash for full scene understanding) only after that attempt fails. '
+  + '`language` is a tesseract language code such as "eng" or "chi_sim", '
   + 'and `psm` is an optional page-segmentation mode from 0 to 13 (defaults to tesseract\'s own choice).'
 
 /** The canonical `ocr_image` outcome. */
