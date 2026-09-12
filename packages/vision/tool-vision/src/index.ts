@@ -55,9 +55,15 @@ export const Config: z<Config> = z.object({
 
 const TOOL_DESCRIPTION =
   'Describe an image with MiniMax VLM and return the visual content as text. '
-  + 'Use this tool when you need to UNDERSTAND a picture (screenshots, diagrams, photos) on '
-  + 'this text-only model route — the `read_image` tool always fails here. Pairs with `ocr_image` '
-  + '(which extracts text only): pick vision_describe when the layout, objects, or scene matter. '
+  // 2026-09-12: 原描述断言"本路由是纯文本、read_image 永远失败" —— 过时且会误导模型绕道
+  // (实测:模型因此不试原生读图,还为它复制文件补扩展名)。改为**条件说明**并要求先试 read_image。
+  + 'Use this tool when you need to UNDERSTAND a picture (screenshots, diagrams, photos) on a '
+  + 'route that cannot take image input. FIRST check whether native image input works: try '
+  + '`read_image` — it succeeds whenever the session model declares image input, and only then '
+  + 'fails with "model does not declare image input" on a text-only route. Reach for '
+  + 'vision_describe ONLY after that attempt fails: it is the fallback for text-only routes. '
+  + 'Pairs with `ocr_image` (which extracts text only): pick vision_describe when the layout, '
+  + 'objects, or scene matter. '
   + '`file_path` resolves against the session workspace (pasted attachments live under '
   + '.dsh/tmp/attachments/); pass a focused `prompt` to steer what to look for.'
 
