@@ -72,3 +72,20 @@ Then start the real profile and watch plugin loading. The profile resolves bare 
 ## Rollback
 
 Reset the checkout to the backup branch, rebuild (`pnpm install`, full build), and restore the matching tarball generation. Keep the rebased work alive in a branch (e.g. `backup/rebased-onto-<version>`) — a completed conflict resolution is expensive to redo and reflog entries are gc food.
+
+### After a rollback: realign the profile node_modules manifests
+
+A checkout reset does not touch `~/.dsh/profiles/web/node_modules/`, and profile healing mirrors the bundle dependency declarations — which do not list the customization-layer workspace plugins (tool-ocr, tool-vision). After an install or healing rewrite during the rollback window, those plugins' manifests vanish from the profile store while the Loader still loads them from the source tree, so every **DeepSeek-model** request fails with `DeepSeek request extension preparation failed` (code `REQUEST_EXTENSION`): the plugin-package-inventory extension cannot resolve their manifests from its anchors. The UI blames the last context-injection card (e.g. hindsight), which is a bystander. Other providers never run this transaction, so only DeepSeek requests break.
+
+Restore each mounted workspace plugin's manifest from the source tree, then restart `pnpm dsh web`:
+
+```sh
+cd /Users/dongdz/Code/deepseek-harness
+for pkg in packages/ocr/tool-ocr packages/vision/tool-vision; do
+  name=$(node -e "console.log(require('./$pkg/package.json').name)")
+  dest="$HOME/.dsh/profiles/web/node_modules/$name"
+  mkdir -p "$dest" && cp "$pkg/package.json" "$dest/package.json"
+done
+```
+
+The durable fix is closing the registration-surface gap: add the workspace plugins to the bundle dependency declaration so healing mirrors them automatically. Until then, rerun this restore whenever a rollback or install lands in that window.
