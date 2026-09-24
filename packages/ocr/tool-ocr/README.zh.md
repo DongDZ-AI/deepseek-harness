@@ -1,8 +1,22 @@
+---
+description: "基于本地 Tesseract 的 OCR 工具：从图片文件提取文字并返回纯文本，供模型直接消费。"
+kind: "package-reference"
+---
 # @deepseek-ai/dsh-tool-ocr
 
 [English](README.md) | 中文
 
+## 概述
+
 面向模型的 `ocr_image` 工具：对图片文件运行本地安装的 Tesseract 二进制，返回提取出的文本。
+
+## 目录
+
+- [概述](#概述)
+- [功能](#功能)
+- [配置](#配置)
+- [失败模式](#失败模式)
+- [说明](#说明)
 
 ## 功能
 
@@ -28,7 +42,7 @@
 - **tesseract 失败** —— 非零退出会带出（截断后的）进程 stderr 与图片路径。
 - **非法参数** —— 格式错误的语言代码与越界的 `psm` 在任何文件系统操作前即被拒绝。
 
-## 说明
+## 开发备注
 
 - 工具声明 `isConcurrencySafe`：每次调用都是独立的只读 OS 进程。
 - 取消是协作式的：`exec.signal` 转发给子进程，`timeoutMs` 声明为工具的协作超时预算。
