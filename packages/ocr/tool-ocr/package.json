@@ -1,7 +1,7 @@
 {
   "name": "@deepseek-ai/dsh-tool-ocr",
   "description": "Model-facing ocr_image tool wrapping a local Tesseract binary for text extraction from images",
-  "version": "0.1.5-rc.2",
+  "version": "0.1.7-rc.1",
   "publishConfig": {
     "access": "public"
   },
