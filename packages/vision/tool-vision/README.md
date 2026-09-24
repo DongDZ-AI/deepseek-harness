@@ -1,8 +1,22 @@
+---
+description: "MiniMax VLM vision tool: describe or answer questions about an image through the local `mmx` CLI, for text-only routes that cannot take native image blocks."
+kind: "package-reference"
+---
 # @deepseek-ai/dsh-tool-vision
 
 English | [中文](README.zh.md)
 
+## Summary
+
 The model-facing `vision_describe` tool: wraps the local MiniMax VLM CLI (`mmx vision describe`) for full image understanding on model routes whose adapter declares text-only input — the gap the multimodal `read_image` tool cannot serve on such routes.
+
+## Table of Contents
+
+- [Summary](#summary)
+- [What it does](#what-it-does)
+- [Configuration](#configuration)
+- [Mount](#mount)
+- [Notes](#notes)
 
 ## What it does
 
@@ -31,6 +45,6 @@ Add a row to the profile's `cordis.patch.yml`:
 
 Requires the `mmx` CLI (`mmx vision describe`) to be installed and reachable on PATH.
 
-## Notes
+## Dev Note
 
 - No runtime invariant companion is published because the tool owns no independent lifecycle stream to compare; its output is the VLM's description bounded by the configured character cap.

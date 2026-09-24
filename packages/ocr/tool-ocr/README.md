@@ -1,8 +1,22 @@
+---
+description: "Tesseract-based OCR tool: extract text from an image file through the local `tesseract` binary, returning plain text for the model to consume."
+kind: "package-reference"
+---
 # @deepseek-ai/dsh-tool-ocr
 
 English | [中文](README.zh.md)
 
+## Summary
+
 The model-facing `ocr_image` tool: runs a locally installed Tesseract binary on an image file and returns the extracted text.
+
+## Table of Contents
+
+- [Summary](#summary)
+- [What it does](#what-it-does)
+- [Configuration](#configuration)
+- [Failure modes](#failure-modes)
+- [Notes](#notes)
 
 ## What it does
 
@@ -28,7 +42,7 @@ All fields are overridable from cordis.yml — the binary location and language 
 - **Tesseract failure** — non-zero exits surface the process stderr (capped) with the image path.
 - **Invalid arguments** — malformed language codes and out-of-range `psm` are rejected before any filesystem work.
 
-## Notes
+## Dev Note
 
 - The tool is `isConcurrencySafe`: each call is an independent read-only OS process.
 - Cancellation is cooperative: `exec.signal` is forwarded to the child process, and `timeoutMs` is declared as the tool's cooperative timeout budget.
