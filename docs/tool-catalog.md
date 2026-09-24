@@ -45,6 +45,8 @@ This table connects model-visible tool names to the plugin package and service s
 | `@deepseek-ai/dsh-tool-workflow` | `workflow` | `ctx.tools`, `ctx.workflowEngine`, `ctx.systemPrompt`, `a calling Agent (exec.agent parents the script children)` | `tool/call`, `tool/result` | - | - |
 | `@deepseek-ai/dsh-tool-workspace-dependencies` | `load_workspace_dependencies` | `ctx.tools` | `tool/call`, `tool/result` | - | - |
 | `@deepseek-ai/dsh-tool-web` | `web_fetch`, `web_search` | `ctx.tools`, `ctx.web`, `ctx.systemPrompt` | `tool/call`, `tool/result` | - | web_search and web_fetch keep provider selection behind ctx.web so model-visible schemas stay stable across backend swaps. |
+| `@deepseek-ai/dsh-tool-ocr` | `ocr_image` | `ctx.tools`, `ctx.fs` | `tool/call`, `tool/result` | - | - |
+| `@deepseek-ai/dsh-tool-vision` | `vision_describe` | `ctx.tools`, `ctx.fs` | `tool/call`, `tool/result` | - | - |
 
 <a id="deepseek-aidsh-plugin-manager"></a>
 
@@ -2717,3 +2719,65 @@ Search the web for current information. Returns an optional summary answer and a
 Source: [`packages/web/tool-web/src/index.ts`](../packages/web/tool-web/src/index.ts)
 
 web_search and web_fetch keep provider selection behind ctx.web so model-visible schemas stay stable across backend swaps.
+
+<a id="deepseek-aidsh-tool-ocr"></a>
+
+## `@deepseek-ai/dsh-tool-ocr`
+
+### `ocr_image`
+
+Run Tesseract OCR on a local image file and return the extracted text. Use this tool for text extraction when the current model cannot take image input, or when you specifically want raw OCR text. FIRST check whether native image input works: try `read_image` — it succeeds whenever the session model declares image input (a multimodal route), and only then fails with "model does not declare image input" on a text-only route. Do not assume it will fail: take one real attempt, and fall back to this tool (or `mmx vision describe --image <path> --prompt "..."` via bash for full scene understanding) only after that attempt fails. `language` is a tesseract language code such as "eng" or "chi_sim", and `psm` is an optional page-segmentation mode from 0 to 13 (defaults to tesseract's own choice).
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "file_path": {
+      "type": "string",
+      "description": "Path to the image file, resolved against the session workspace."
+    },
+    "language": {
+      "type": "string",
+      "description": "Tesseract language code, e.g. \"eng\" or \"chi_sim\"; defaults to the configured language."
+    },
+    "psm": {
+      "type": "integer",
+      "description": "Optional Tesseract page-segmentation mode, 0-13."
+    }
+  },
+  "required": [
+    "file_path"
+  ]
+}
+```
+
+Source: [`packages/ocr/tool-ocr/src/index.ts`](../packages/ocr/tool-ocr/src/index.ts)
+
+<a id="deepseek-aidsh-tool-vision"></a>
+
+## `@deepseek-ai/dsh-tool-vision`
+
+### `vision_describe`
+
+Describe an image with MiniMax VLM and return the visual content as text. Use this tool when you need to UNDERSTAND a picture (screenshots, diagrams, photos) on a route that cannot take image input. FIRST check whether native image input works: try `read_image` — it succeeds whenever the session model declares image input, and only then fails with "model does not declare image input" on a text-only route. Reach for vision_describe ONLY after that attempt fails: it is the fallback for text-only routes. Pairs with `ocr_image` (which extracts text only): pick vision_describe when the layout, objects, or scene matter. `file_path` resolves against the session workspace (pasted attachments live under .dsh/tmp/attachments/); pass a focused `prompt` to steer what to look for.
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "file_path": {
+      "type": "string",
+      "description": "Path to the image file, resolved against the session workspace."
+    },
+    "prompt": {
+      "type": "string",
+      "description": "What to look for in the image; defaults to a general description."
+    }
+  },
+  "required": [
+    "file_path"
+  ]
+}
+```
+
+Source: [`packages/vision/tool-vision/src/index.ts`](../packages/vision/tool-vision/src/index.ts)

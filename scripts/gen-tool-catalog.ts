@@ -64,6 +64,8 @@ import * as StagehandBrowserTools from '@deepseek-ai/dsh-experimental-browser-us
 import type TeamService from '@deepseek-ai/dsh-experimental-agent-team'
 import * as ToolTeam from '@deepseek-ai/dsh-experimental-tool-agent-team'
 import * as ToolTodo from '@deepseek-ai/dsh-tool-todo'
+import * as ToolOcr from '@deepseek-ai/dsh-tool-ocr'
+import * as ToolVision from '@deepseek-ai/dsh-tool-vision'
 import type PluginManager from '@deepseek-ai/dsh-plugin-manager'
 import * as PluginManagerTools from '@deepseek-ai/dsh-plugin-manager/tools'
 import SandboxPolicy from '@deepseek-ai/dsh-sandbox-policy'
@@ -670,6 +672,28 @@ const TOOL_PACKAGES: ToolPackage[] = [
     },
     note:
       'web_search and web_fetch keep provider selection behind ctx.web so model-visible schemas stay stable across backend swaps.',
+  },
+  {
+    pkg: '@deepseek-ai/dsh-tool-ocr',
+    dir: 'tool-ocr',
+    source: 'packages/ocr/tool-ocr/src/index.ts',
+    requires: ['ctx.tools', 'ctx.fs'],
+    writes: ['tool/call', 'tool/result'],
+    async mount(ctx) {
+      await ctx.plugin(LocalFileSystem)
+      await ctx.plugin(ToolOcr)
+    },
+  },
+  {
+    pkg: '@deepseek-ai/dsh-tool-vision',
+    dir: 'tool-vision',
+    source: 'packages/vision/tool-vision/src/index.ts',
+    requires: ['ctx.tools', 'ctx.fs'],
+    writes: ['tool/call', 'tool/result'],
+    async mount(ctx) {
+      await ctx.plugin(LocalFileSystem)
+      await ctx.plugin(ToolVision)
+    },
   },
 ]
 
