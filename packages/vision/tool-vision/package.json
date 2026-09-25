@@ -1,7 +1,7 @@
 {
   "name": "@deepseek-ai/dsh-tool-vision",
   "description": "Model-facing vision_describe tool wrapping the local mmx CLI (MiniMax VLM) for full image understanding on text-only model routes",
-  "version": "0.1.7-rc.1",
+  "version": "0.1.7-rc.2",
   "publishConfig": {
     "access": "public"
   },
