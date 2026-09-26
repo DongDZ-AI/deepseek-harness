@@ -49,6 +49,8 @@
 | `@deepseek-ai/dsh-tool-workflow` | `workflow` | `ctx.tools`、`ctx.workflowEngine`、`ctx.systemPrompt`、`a calling Agent (exec.agent parents the script children)` | `tool/call`、`tool/result` | - | - |
 | `@deepseek-ai/dsh-tool-workspace-dependencies` | `load_workspace_dependencies` | `ctx.tools` | `tool/call`, `tool/result` | - | - |
 | `@deepseek-ai/dsh-tool-web` | `web_fetch`、`web_search` | `ctx.tools`、`ctx.web`、`ctx.systemPrompt` | `tool/call`、`tool/result` | - | web_search 和 web_fetch 将提供方选择置于 ctx.web 之后，使模型可见 schema 在更换后端时保持稳定。 |
+| `@deepseek-ai/dsh-tool-ocr` | `ocr_image` | `ctx.tools`、`ctx.fs` | `tool/call`、`tool/result` | - | - |
+| `@deepseek-ai/dsh-tool-vision` | `vision_describe` | `ctx.tools`、`ctx.fs` | `tool/call`、`tool/result` | - | - |
 
 <a id="deepseek-aidsh-plugin-manager"></a>
 
@@ -2729,3 +2731,65 @@ todo_write 是会话所有的状态；UI 将最新的 todo/write 事件渲染为
 来源：[`packages/web/tool-web/src/index.ts`](../packages/web/tool-web/src/index.ts)
 
 web_search 和 web_fetch 将提供方选择置于 ctx.web 之后，使模型可见 schema 在更换后端时保持稳定。
+
+<a id="deepseek-aidsh-tool-ocr"></a>
+
+## `@deepseek-ai/dsh-tool-ocr`
+
+### `ocr_image`
+
+对本地图片文件运行 Tesseract OCR 并返回提取出的文字。当前路由不能接收原生图片输入、又需要提取文字时使用该工具。
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "file_path": {
+      "type": "string",
+      "description": "Path to the image file, resolved against the session workspace."
+    },
+    "language": {
+      "type": "string",
+      "description": "Tesseract language code, e.g. \"eng\" or \"chi_sim\"; defaults to the configured language."
+    },
+    "psm": {
+      "type": "integer",
+      "description": "Optional Tesseract page-segmentation mode, 0-13."
+    }
+  },
+  "required": [
+    "file_path"
+  ]
+}
+```
+
+来源：[`packages/ocr/tool-ocr/src/index.ts`](../packages/ocr/tool-ocr/src/index.ts)
+
+<a id="deepseek-aidsh-tool-vision"></a>
+
+## `@deepseek-ai/dsh-tool-vision`
+
+### `vision_describe`
+
+用 MiniMax VLM 描述图片，并把视觉内容以文本返回。需要理解图片（截图、图表、照片）而当前路由不能接收原生图片输入时使用该工具。
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "file_path": {
+      "type": "string",
+      "description": "Path to the image file, resolved against the session workspace."
+    },
+    "prompt": {
+      "type": "string",
+      "description": "What to look for in the image; defaults to a general description."
+    }
+  },
+  "required": [
+    "file_path"
+  ]
+}
+```
+
+来源：[`packages/vision/tool-vision/src/index.ts`](../packages/vision/tool-vision/src/index.ts)

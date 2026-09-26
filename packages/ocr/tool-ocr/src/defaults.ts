@@ -14,8 +14,9 @@ export const DEFAULT_LANGUAGE = 'eng'
 export const DEFAULT_TIMEOUT_MS = 30_000
 /** Default cap on extracted characters; longer output is truncated with a notice. */
 export const DEFAULT_MAX_OUTPUT_CHARS = 200_000
-/** Tesseract page-segmentation mode bounds (inclusive), per the tesseract manual. */
+/** Lower Tesseract page-segmentation mode bound (inclusive), per the tesseract manual. */
 export const PSM_MIN = 0
+/** Upper Tesseract page-segmentation mode bound (inclusive); see {@link PSM_MIN}. */
 export const PSM_MAX = 13
 
 /** Tesseract language codes: letters, digits, underscore, and `+` for compound codes. */

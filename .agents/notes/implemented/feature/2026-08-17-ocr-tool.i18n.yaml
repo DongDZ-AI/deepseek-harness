@@ -1,6 +1,19 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for 2026-08-17-ocr-tool.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write .agents/notes/implemented/feature/2026-08-17-ocr-tool.md
-2026-08-17-ocr-tool.md: 93451b13132d7b5727a21d7727a1946f129ae654
-2026-08-17-ocr-tool.zh.md: c1747dc56136b65a6ffeb524320974c317d418cd
+/agent-note-local-tesseract-ocr-tool:
+  en: dd619433abd06253
+  zh: 0b843eb5f53c96e3
+/agent-note-local-tesseract-ocr-tool/problem:
+  en: c42fb0f7acd0138a
+  zh: 2c489e74575a4ec6
+/agent-note-local-tesseract-ocr-tool/decision:
+  en: ec79beb7c686e9bf
+  zh: d03ad63f2dcc6539
+/agent-note-local-tesseract-ocr-tool/alternatives-considered:
+  en: dcc15cc790b091ab
+  zh: 6825464d04927deb
+/agent-note-local-tesseract-ocr-tool/consequences:
+  en: e2878d52545476c2
+  zh: 7fc2bfded9d27717

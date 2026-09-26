@@ -3663,6 +3663,29 @@ export interface Config {
 ```
 <!-- END GENERATED config-catalog:@deepseek-ai/dsh-tool-lsp -->
 
+<!-- BEGIN GENERATED config-catalog:@deepseek-ai/dsh-tool-ocr -->
+<a id="deepseek-aidsh-tool-ocr"></a>
+
+## `@deepseek-ai/dsh-tool-ocr`
+
+- `inject`: `tools` · `fs`
+- `source`: [`packages/ocr/tool-ocr/src/index.ts:38`](../packages/ocr/tool-ocr/src/index.ts)
+
+```ts config-catalog
+/** Deployment-varying OCR policy; every field is overridable from cordis.yml. */
+export interface Config {
+  /** Absolute path to the tesseract executable. */
+  binPath: string
+  /** Default language code when the model omits `language`. */
+  defaultLanguage: string
+  /** Child-process timeout in milliseconds; the tool declares this as its cooperative budget. */
+  timeoutMs: number
+  /** Cap on extracted characters; longer output is truncated with a notice. */
+  maxOutputChars: number
+}
+```
+<!-- END GENERATED config-catalog:@deepseek-ai/dsh-tool-ocr -->
+
 <!-- BEGIN GENERATED config-catalog:@deepseek-ai/dsh-tool-present -->
 <a id="deepseek-aidsh-tool-present"></a>
 
@@ -3923,6 +3946,29 @@ export interface Config {
 }
 ```
 <!-- END GENERATED config-catalog:@deepseek-ai/dsh-tool-todo -->
+
+<!-- BEGIN GENERATED config-catalog:@deepseek-ai/dsh-tool-vision -->
+<a id="deepseek-aidsh-tool-vision"></a>
+
+## `@deepseek-ai/dsh-tool-vision`
+
+- `inject`: `tools` · `fs`
+- `source`: [`packages/vision/tool-vision/src/index.ts:37`](../packages/vision/tool-vision/src/index.ts)
+
+```ts config-catalog
+/** Deployment-varying vision policy; every field is overridable from cordis.yml. */
+export interface Config {
+  /** The mmx executable name or absolute path. */
+  binPath: string
+  /** Default question when the model omits `prompt`. */
+  defaultPrompt: string
+  /** Child-process timeout in milliseconds; the tool declares this as its cooperative budget. */
+  timeoutMs: number
+  /** Cap on returned characters; longer output is truncated with a notice. */
+  maxOutputChars: number
+}
+```
+<!-- END GENERATED config-catalog:@deepseek-ai/dsh-tool-vision -->
 
 <!-- BEGIN GENERATED config-catalog:@deepseek-ai/dsh-tool-web -->
 <a id="deepseek-aidsh-tool-web"></a>

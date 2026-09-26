@@ -16,7 +16,9 @@ The model-facing `vision_describe` tool: wraps the local MiniMax VLM CLI (`mmx v
 - [What it does](#what-it-does)
 - [Configuration](#configuration)
 - [Mount](#mount)
-- [Notes](#notes)
+- [Model Experience](#model-experience)
+- [Known Limitations and Deferred Work](#known-limitations-and-deferred-work)
+- [Dev Note](#dev-note)
 
 ## What it does
 
@@ -45,6 +47,30 @@ Add a row to the profile's `cordis.patch.yml`:
 
 Requires the `mmx` CLI (`mmx vision describe`) to be installed and reachable on PATH.
 
-## Dev Note
+## Model Experience
+
+### vision_describe
+
+#### What the model sees
+
+The gated `vision_describe` schema in the [tool catalog](../../../docs/tool-catalog.md#deepseek-aidsh-tool-vision) requires `file_path` and takes an optional `prompt`; the result is the VLM's description as text. It answers questions about layout, objects, and scene where `ocr_image` returns only characters.
+
+#### Token effect
+
+One tool schema per mounted agent. Each call appends the description, bounded by `maxOutputChars` (40000 by default) with an explicit truncation notice; image bytes never enter model messages.
+
+#### KV Cache effect
+
+The tool schema is a stable prefix contribution; per-call output appends after the cached prefix and does not rewrite it.
+
+## Known Limitations and Deferred Work
+
+<a id="known-limitations-and-deferred-work"></a>
+
+- **External CLI required** — the tool shells out to `mmx vision describe`; a missing CLI, or an mmx profile that is not signed in, fails the call rather than degrading to another route.
+- **Latency is provider-bound** — one call may consume the whole `timeoutMs` (120 s by default), which is the tool's cooperative budget rather than a product limit.
+- **Description only** — no bounding boxes or verbatim text; pair with `ocr_image` when exact characters matter.
+
+### Dev Note
 
 - No runtime invariant companion is published because the tool owns no independent lifecycle stream to compare; its output is the VLM's description bounded by the configured character cap.

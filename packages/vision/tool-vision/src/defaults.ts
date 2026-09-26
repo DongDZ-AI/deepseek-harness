@@ -12,7 +12,12 @@ export const DEFAULT_TIMEOUT_MS = 120_000
 /** Cap on returned characters; longer output is truncated with a notice. */
 export const DEFAULT_MAX_OUTPUT_CHARS = 40_000
 
-/** Clip overlong output, keeping a trailing notice so the model knows it is incomplete. */
+/**
+ * Clip overlong output, keeping a trailing notice so the model knows it is incomplete.
+ * @param text - the raw CLI stdout.
+ * @param maxChars - the configured output cap.
+ * @returns the (possibly truncated) text.
+ */
 export function truncateOutput(text: string, maxChars: number): string {
   if (text.length <= maxChars) return text
   return `${text.slice(0, maxChars)}\n… [truncated ${text.length - maxChars} characters]`

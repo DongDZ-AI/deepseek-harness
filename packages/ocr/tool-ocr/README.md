@@ -16,7 +16,9 @@ The model-facing `ocr_image` tool: runs a locally installed Tesseract binary on 
 - [What it does](#what-it-does)
 - [Configuration](#configuration)
 - [Failure modes](#failure-modes)
-- [Notes](#notes)
+- [Model Experience](#model-experience)
+- [Known Limitations and Deferred Work](#known-limitations-and-deferred-work)
+- [Dev Note](#dev-note)
 
 ## What it does
 
@@ -42,7 +44,31 @@ All fields are overridable from cordis.yml — the binary location and language 
 - **Tesseract failure** — non-zero exits surface the process stderr (capped) with the image path.
 - **Invalid arguments** — malformed language codes and out-of-range `psm` are rejected before any filesystem work.
 
-## Dev Note
+## Model Experience
+
+### ocr_image
+
+#### What the model sees
+
+The gated `ocr_image` schema in the [tool catalog](../../../docs/tool-catalog.md#deepseek-aidsh-tool-ocr) requires `file_path` and takes optional `language` and `psm`; the result is the extracted text itself rather than a structured object. On a text-only route this is the way to read an image, and it returns characters instead of a description.
+
+#### Token effect
+
+One tool schema per mounted agent. Each call appends the extracted text, bounded by `maxOutputChars` (200000 by default) with an explicit truncation notice, so a dense scan cannot silently consume unlimited context.
+
+#### KV Cache effect
+
+The tool schema is a stable prefix contribution; per-call output appends after the cached prefix and does not rewrite it.
+
+## Known Limitations and Deferred Work
+
+<a id="known-limitations-and-deferred-work"></a>
+
+- **External binary required** — the tool shells out to a locally installed `tesseract`; a missing binary, or a `binPath` that does not resolve, fails the call instead of falling back to another OCR path.
+- **Language coverage follows the installed traineddata** — a language code with no Tesseract data behind it is rejected by Tesseract at run time, not by this tool's validation.
+- **Whole-image text only** — no per-region, coordinate, or layout structure is returned; `psm` is the only layout control.
+
+### Dev Note
 
 - The tool is `isConcurrencySafe`: each call is an independent read-only OS process.
 - Cancellation is cooperative: `exec.signal` is forwarded to the child process, and `timeoutMs` is declared as the tool's cooperative timeout budget.

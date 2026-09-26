@@ -1,6 +1,46 @@
-# Bilingual-pair consistency record (docs/i18n/README.md): the git blob hash of each
-# side as of the last confirmed-consistent state. Both languages carry equal authority;
-# after editing either side, bring the other along and re-record with:
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
 #   pnpm run verify-translation-pairing --write packages/ocr/tool-ocr/README.md
-README.md: 31c9b522a7dc4c179badda8ffbdf15307210eb9d
-README.zh.md: 7ea84f89ad4cd207f65edcf3d076cc1ada86e13d
+/:
+  en: 26a0ecf184b91d06
+  zh: 500d8fa47571feff
+/deepseek-ai-dsh-tool-ocr:
+  en: e5ce7f42a2af3dae
+  zh: 1fd5eac235104566
+/deepseek-ai-dsh-tool-ocr/summary:
+  en: 688706c02a0fb52f
+  zh: 725ea4582bac9d4b
+/deepseek-ai-dsh-tool-ocr/table-of-contents:
+  en: d6828883f8a859ca
+  zh: 00d6d35f394db962
+/deepseek-ai-dsh-tool-ocr/what-it-does:
+  en: f50bff2713c150fc
+  zh: 620a5a5611908584
+/deepseek-ai-dsh-tool-ocr/configuration:
+  en: e8a492f72e7acc85
+  zh: 8b7dd47e0b5e7400
+/deepseek-ai-dsh-tool-ocr/failure-modes:
+  en: 6d68cb065dbc3f2d
+  zh: ca612f26b1fd26da
+/deepseek-ai-dsh-tool-ocr/model-experience:
+  en: 215e7ba838619b7b
+  zh: a311da3843709f90
+/deepseek-ai-dsh-tool-ocr/model-experience/ocr-image:
+  en: daeb233a8fce39eb
+  zh: daeb233a8fce39eb
+/deepseek-ai-dsh-tool-ocr/model-experience/ocr-image/what-the-model-sees:
+  en: dbb2f646e3c5d238
+  zh: 92c6ce7b6aac14fa
+/deepseek-ai-dsh-tool-ocr/model-experience/ocr-image/token-effect:
+  en: 5a88c17d2a46ccaf
+  zh: 210c9f4525e3fc17
+/deepseek-ai-dsh-tool-ocr/model-experience/ocr-image/kv-cache-effect:
+  en: 76b022c56a520b8c
+  zh: 89f05a0f5298f989
+/deepseek-ai-dsh-tool-ocr/known-limitations-and-deferred-work:
+  en: aae8e8bd23b8f453
+  zh: 55ff7a55db4cd3b5
+/deepseek-ai-dsh-tool-ocr/known-limitations-and-deferred-work/dev-note:
+  en: cdb230697cd81472
+  zh: 1251a32a6d6ef536
