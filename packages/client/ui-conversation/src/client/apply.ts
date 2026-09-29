@@ -213,7 +213,7 @@ export function apply(ctx: Context, config: Config = Config({})): void {
   ctx.slots.inject('settings.general.item', () => ctx.slots.register({
     name: 'settings.general.item',
     id: 'chat-layout-style',
-    order: 30,
+    order: 35,
     locale: NS,
     inject: (): LayoutStyleRowInjected => ({
       hooks: { layoutStyle: layoutStyle.style },
